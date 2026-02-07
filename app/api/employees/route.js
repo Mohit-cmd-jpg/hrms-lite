@@ -25,12 +25,12 @@ export async function GET() {
 export async function POST(request) {
     try {
         const body = await request.json()
-        const { employee_id, full_name, email, department } = body
+        const { full_name, email, department } = body
 
-        // Validate required fields
-        if (!employee_id || !full_name || !email || !department) {
+        // Validate required fields (employee_id is now auto-generated)
+        if (!full_name || !email || !department) {
             return NextResponse.json(
-                { error: 'All fields are required: employee_id, full_name, email, department' },
+                { error: 'All fields are required: full_name, email, department' },
                 { status: 400 }
             )
         }
@@ -41,7 +41,12 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
         }
 
-        // Insert the employee (Supabase will handle unique constraint for employee_id)
+        // Auto-generate employee_id in format EMP-XXXX
+        const timestamp = Date.now().toString(36).toUpperCase()
+        const random = Math.random().toString(36).substring(2, 6).toUpperCase()
+        const employee_id = `EMP-${timestamp.slice(-4)}${random}`
+
+        // Insert the employee
         const { data, error } = await supabase
             .from('employees')
             .insert([{ employee_id, full_name, email, department }])
@@ -49,9 +54,9 @@ export async function POST(request) {
             .single()
 
         if (error) {
-            // Check if it's a duplicate employee_id error
+            // Check if it's a duplicate employee_id error (retry with new ID)
             if (error.code === '23505') {
-                return NextResponse.json({ error: 'Employee ID already exists' }, { status: 409 })
+                return NextResponse.json({ error: 'Please try again' }, { status: 409 })
             }
             return NextResponse.json({ error: error.message }, { status: 500 })
         }
