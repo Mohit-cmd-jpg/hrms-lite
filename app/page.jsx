@@ -19,9 +19,14 @@ export default function Dashboard() {
     const [displayDate, setDisplayDate] = useState('')
 
     // Set today's date on client-side only to avoid hydration mismatch
+    // Use local date format (YYYY-MM-DD) to match database format
     useEffect(() => {
         const now = new Date()
-        setToday(now.toISOString().split('T')[0])
+        // Format as YYYY-MM-DD in local timezone (not UTC)
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, '0')
+        const day = String(now.getDate()).padStart(2, '0')
+        setToday(`${year}-${month}-${day}`)
         setDisplayDate(now.toLocaleDateString())
     }, [])
 
