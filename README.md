@@ -1,6 +1,16 @@
 # HRMS Lite
 
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://hrms-eta-five.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E)](https://supabase.com/)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black)](https://vercel.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 A minimal, production-ready Human Resource Management System built with Next.js and Supabase.
+
+## 🔗 Live Demo
+
+**🌐 [https://hrms-eta-five.vercel.app](https://hrms-eta-five.vercel.app)**
 
 ## 🎯 Features
 
@@ -12,14 +22,10 @@ A minimal, production-ready Human Resource Management System built with Next.js 
 
 | Technology | Purpose |
 |------------|---------|
-| Next.js 14 (App Router) | Frontend + API Routes |
+| Next.js 16 (App Router) | Frontend + API Routes |
 | Supabase | PostgreSQL Database |
 | Tailwind CSS | Styling |
 | Vercel | Deployment |
-
-## 🔗 Live Demo
-
-**Deployment URL**: `[Add your Vercel URL here after deployment]`
 
 ## 📦 Project Structure
 
@@ -67,8 +73,8 @@ CREATE TABLE attendance (
 
 1. **Clone the repository**
    ```bash
-   git clone <repo-url>
-   cd hrms
+   git clone https://github.com/Mohit-cmd-jpg/hrms-lite.git
+   cd hrms-lite
    ```
 
 2. **Install dependencies**
@@ -154,6 +160,10 @@ CREATE TABLE attendance (
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 4. Deploy
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ---
 
