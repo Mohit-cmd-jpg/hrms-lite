@@ -1,9 +1,21 @@
 // Employees Page - Manage employee records
 // Features: Add new employee, view all employees, delete employees
+// Updated: Added department dropdown with custom option for easier data entry
 'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+
+// Default departments - stored as plain text in database
+// Why plain text: Keeps schema simple, no separate departments table needed
+// This is interview-friendly and easy to explain
+const DEFAULT_DEPARTMENTS = [
+    'Engineering',
+    'HR',
+    'Sales',
+    'Marketing',
+    'Operations',
+]
 
 export default function EmployeesPage() {
     // State for employees list and form data
@@ -17,8 +29,12 @@ export default function EmployeesPage() {
     const [formData, setFormData] = useState({
         full_name: '',
         email: '',
-        department: ''
+        department: '',
+        customDepartment: '' // For custom department input
     })
+
+    // Track whether user wants to use custom department
+    const [useCustomDept, setUseCustomDept] = useState(false)
 
     // Fetch all employees on page load
     useEffect(() => {
@@ -55,11 +71,27 @@ export default function EmployeesPage() {
         setFormError(null)
         setSubmitting(true)
 
+        // Determine which department to use
+        // Priority: custom department > dropdown selection
+        const department = useCustomDept && formData.customDepartment.trim()
+            ? formData.customDepartment.trim()
+            : formData.department
+
+        if (!department) {
+            setFormError('Please select or enter a department')
+            setSubmitting(false)
+            return
+        }
+
         try {
             const res = await fetch('/api/employees', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({
+                    full_name: formData.full_name,
+                    email: formData.email,
+                    department
+                })
             })
 
             const data = await res.json()
@@ -69,7 +101,8 @@ export default function EmployeesPage() {
             }
 
             // Reset form and refresh list
-            setFormData({ full_name: '', email: '', department: '' })
+            setFormData({ full_name: '', email: '', department: '', customDepartment: '' })
+            setUseCustomDept(false)
             fetchEmployees()
         } catch (err) {
             setFormError(err.message)
@@ -108,9 +141,6 @@ export default function EmployeesPage() {
                             <h1 className="text-2xl font-bold text-gray-900">Employees</h1>
                             <p className="text-gray-600 mt-1">Manage employee records</p>
                         </div>
-                        <Link href="/" className="text-blue-600 hover:text-blue-800">
-                            ← Back to Home
-                        </Link>
                     </div>
                 </div>
             </header>
@@ -126,54 +156,102 @@ export default function EmployeesPage() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="grid md:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Full Name
-                            </label>
-                            <input
-                                type="text"
-                                name="full_name"
-                                value={formData.full_name}
-                                onChange={handleChange}
-                                required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter full name"
-                            />
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Full Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="full_name"
+                                    value={formData.full_name}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter full name"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="name@gmail.com"
+                                />
+                            </div>
                         </div>
 
+                        {/* Department Selection */}
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Department
+                                </label>
+                                <select
+                                    name="department"
+                                    value={formData.department}
+                                    onChange={handleChange}
+                                    disabled={useCustomDept}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                >
+                                    <option value="">Select Department</option>
+                                    {DEFAULT_DEPARTMENTS.map((dept) => (
+                                        <option key={dept} value={dept}>
+                                            {dept}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="name@gmail.com"
-                            />
+                            {/* Custom Department Option */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Or Add Custom Department
+                                </label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        name="customDepartment"
+                                        value={formData.customDepartment}
+                                        onChange={(e) => {
+                                            handleChange(e)
+                                            // Auto-enable custom if user types
+                                            if (e.target.value.trim()) {
+                                                setUseCustomDept(true)
+                                            }
+                                        }}
+                                        onFocus={() => setUseCustomDept(true)}
+                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Enter custom department"
+                                    />
+                                    {useCustomDept && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setUseCustomDept(false)
+                                                setFormData({ ...formData, customDepartment: '' })
+                                            }}
+                                            className="px-3 py-2 text-gray-500 hover:text-gray-700"
+                                        >
+                                            ✕
+                                        </button>
+                                    )}
+                                </div>
+                                {useCustomDept && (
+                                    <p className="text-xs text-blue-600 mt-1">Using custom department</p>
+                                )}
+                            </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Department
-                            </label>
-                            <input
-                                type="text"
-                                name="department"
-                                value={formData.department}
-                                onChange={handleChange}
-                                required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter department"
-                            />
-                        </div>
-
-                        <div className="md:col-span-3">
                             <button
                                 type="submit"
                                 disabled={submitting}
@@ -256,7 +334,13 @@ export default function EmployeesPage() {
                                             <td className="px-6 py-4 text-sm text-gray-600">
                                                 {emp.department}
                                             </td>
-                                            <td className="px-6 py-4 text-sm">
+                                            <td className="px-6 py-4 text-sm space-x-3">
+                                                <Link
+                                                    href={`/employees/${emp.employee_id}`}
+                                                    className="text-blue-600 hover:text-blue-800"
+                                                >
+                                                    View
+                                                </Link>
                                                 <button
                                                     onClick={() => handleDelete(emp.employee_id)}
                                                     className="text-red-600 hover:text-red-800"

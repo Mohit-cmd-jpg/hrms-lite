@@ -127,9 +127,6 @@ export default function AttendancePage() {
                             <h1 className="text-2xl font-bold text-gray-900">Attendance</h1>
                             <p className="text-gray-600 mt-1">Track daily attendance</p>
                         </div>
-                        <Link href="/" className="text-blue-600 hover:text-blue-800">
-                            ← Back to Home
-                        </Link>
                     </div>
                 </div>
             </header>
@@ -296,8 +293,8 @@ export default function AttendancePage() {
                                             <td className="px-6 py-4 text-sm">
                                                 <span
                                                     className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${record.status === 'Present'
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : 'bg-red-100 text-red-800'
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : 'bg-red-100 text-red-800'
                                                         }`}
                                                 >
                                                     {record.status}
