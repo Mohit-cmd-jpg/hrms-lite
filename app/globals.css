@@ -12,15 +12,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Force light mode for this app - avoid dark mode text visibility issues */
+body {
+  background: #f9fafb;
+  color: #171717;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Ensure form inputs always have dark text on light background */
+input,
+select,
+textarea {
+  color: #171717 !important;
+  background-color: #ffffff !important;
+}
+
+input::placeholder {
+  color: #9ca3af !important;
 }
