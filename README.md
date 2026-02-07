@@ -1,36 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HRMS Lite
 
-## Getting Started
+A minimal, production-ready Human Resource Management System built with Next.js and Supabase.
 
-First, run the development server:
+## 🎯 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Employee Management**: Add, view, and delete employee records
+- **Attendance Tracking**: Mark daily attendance (Present/Absent) for employees
+- **Clean UI**: Professional interface with loading, empty, and error states
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| Next.js 14 (App Router) | Frontend + API Routes |
+| Supabase | PostgreSQL Database |
+| Tailwind CSS | Styling |
+| Vercel | Deployment |
+
+## 🔗 Live Demo
+
+**Deployment URL**: `[Add your Vercel URL here after deployment]`
+
+## 📦 Project Structure
+
+```
+/hrms
+├── app/
+│   ├── api/
+│   │   ├── employees/route.js   # Employee CRUD API
+│   │   └── attendance/route.js  # Attendance API
+│   ├── employees/page.jsx       # Employee management UI
+│   ├── attendance/page.jsx      # Attendance tracking UI
+│   └── page.jsx                 # Home page
+├── lib/
+│   └── supabase.js              # Supabase client
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🗄️ Database Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Run this SQL in your Supabase SQL Editor:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sql
+-- Employees table
+CREATE TABLE employees (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  employee_id TEXT UNIQUE NOT NULL,
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  department TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-## Learn More
+-- Attendance table
+CREATE TABLE attendance (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  employee_id TEXT REFERENCES employees(employee_id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('Present', 'Absent')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(employee_id, date)
+);
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Local Development
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository**
+   ```bash
+   git clone <repo-url>
+   cd hrms
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+3. **Set up environment variables**
+   
+   Create `.env.local` in the root directory:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. **Open** [http://localhost:3000](http://localhost:3000)
+
+## 🔐 Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| NEXT_PUBLIC_SUPABASE_URL | Your Supabase project URL |
+| NEXT_PUBLIC_SUPABASE_ANON_KEY | Your Supabase anon/public key |
+
+## 📝 API Endpoints
+
+### Employees
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/employees` | Get all employees |
+| POST | `/api/employees` | Create employee |
+| DELETE | `/api/employees?employee_id=X` | Delete employee |
+
+### Attendance
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/attendance` | Get all attendance |
+| GET | `/api/attendance?employee_id=X` | Get attendance by employee |
+| POST | `/api/attendance` | Mark attendance |
+
+## 🏗️ Architecture Decisions
+
+### Why Next.js API Routes instead of a separate backend?
+- **Simplicity**: Single deployment, single codebase
+- **Cost**: No extra server to manage
+- **Performance**: API routes run on the same edge network as the frontend
+
+### Why Supabase instead of a raw database?
+- **Quick setup**: Database ready in minutes
+- **Built-in client**: No ORM needed, simple JS client
+- **Free tier**: Generous limits for small projects
+
+### Why no authentication?
+- **Requirement**: Task explicitly said no auth
+- **Simplicity**: Keeps the codebase minimal and interview-friendly
+- **Trade-off**: Only suitable for internal/trusted environments
+
+### Why simple state management?
+- **React useState**: Sufficient for this scale
+- **No Redux**: Adds complexity without benefit for small apps
+- **Fetch on demand**: Simple pattern, easy to understand
+
+## ⚠️ Assumptions & Limitations
+
+1. **No authentication** - Anyone with access can modify data
+2. **Single admin** - Not designed for multi-user/role scenarios
+3. **No pagination** - All records loaded at once (fine for small datasets)
+4. **No edit functionality** - Only add and delete for employees
+5. **Date-based attendance** - One record per employee per day
+
+## 🚀 Deployment to Vercel
+
+1. Push code to GitHub
+2. Import project in Vercel
+3. Add environment variables in Vercel dashboard:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Deploy
+
+---
+
+Built for interview assessment purposes. Keep it simple.

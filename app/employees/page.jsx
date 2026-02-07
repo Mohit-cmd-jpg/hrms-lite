@@ -1,0 +1,292 @@
+// Employees Page - Manage employee records
+// Features: Add new employee, view all employees, delete employees
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+
+export default function EmployeesPage() {
+    // State for employees list and form data
+    const [employees, setEmployees] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const [formError, setFormError] = useState(null)
+    const [submitting, setSubmitting] = useState(false)
+
+    // Form state
+    const [formData, setFormData] = useState({
+        employee_id: '',
+        full_name: '',
+        email: '',
+        department: ''
+    })
+
+    // Fetch all employees on page load
+    useEffect(() => {
+        fetchEmployees()
+    }, [])
+
+    const fetchEmployees = async () => {
+        try {
+            setLoading(true)
+            setError(null)
+            const res = await fetch('/api/employees')
+            const data = await res.json()
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to fetch employees')
+            }
+
+            setEmployees(data)
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    // Handle form input changes
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
+    }
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setFormError(null)
+        setSubmitting(true)
+
+        try {
+            const res = await fetch('/api/employees', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+
+            const data = await res.json()
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to add employee')
+            }
+
+            // Reset form and refresh list
+            setFormData({ employee_id: '', full_name: '', email: '', department: '' })
+            fetchEmployees()
+        } catch (err) {
+            setFormError(err.message)
+        } finally {
+            setSubmitting(false)
+        }
+    }
+
+    // Handle employee deletion
+    const handleDelete = async (employee_id) => {
+        if (!confirm('Are you sure you want to delete this employee?')) return
+
+        try {
+            const res = await fetch(`/api/employees?employee_id=${employee_id}`, {
+                method: 'DELETE'
+            })
+
+            if (!res.ok) {
+                const data = await res.json()
+                throw new Error(data.error || 'Failed to delete employee')
+            }
+
+            fetchEmployees()
+        } catch (err) {
+            alert(err.message)
+        }
+    }
+
+    return (
+        <main className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <header className="bg-white shadow-sm">
+                <div className="max-w-4xl mx-auto px-4 py-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900">Employees</h1>
+                            <p className="text-gray-600 mt-1">Manage employee records</p>
+                        </div>
+                        <Link href="/" className="text-blue-600 hover:text-blue-800">
+                            ← Back to Home
+                        </Link>
+                    </div>
+                </div>
+            </header>
+
+            <div className="max-w-4xl mx-auto px-4 py-8">
+                {/* Add Employee Form */}
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+                    <h2 className="text-lg font-semibold text-gray-800 mb-4">Add New Employee</h2>
+
+                    {formError && (
+                        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded">
+                            {formError}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Employee ID
+                            </label>
+                            <input
+                                type="text"
+                                name="employee_id"
+                                value={formData.employee_id}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="EMP001"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Full Name
+                            </label>
+                            <input
+                                type="text"
+                                name="full_name"
+                                value={formData.full_name}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="John Doe"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="john@company.com"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Department
+                            </label>
+                            <input
+                                type="text"
+                                name="department"
+                                value={formData.department}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Engineering"
+                            />
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <button
+                                type="submit"
+                                disabled={submitting}
+                                className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
+                            >
+                                {submitting ? 'Adding...' : 'Add Employee'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                {/* Employees Table */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div className="px-6 py-4 border-b border-gray-200">
+                        <h2 className="text-lg font-semibold text-gray-800">All Employees</h2>
+                    </div>
+
+                    {/* Loading State */}
+                    {loading && (
+                        <div className="p-8 text-center text-gray-500">
+                            Loading employees...
+                        </div>
+                    )}
+
+                    {/* Error State */}
+                    {error && !loading && (
+                        <div className="p-8 text-center">
+                            <p className="text-red-600 mb-4">{error}</p>
+                            <button
+                                onClick={fetchEmployees}
+                                className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Empty State */}
+                    {!loading && !error && employees.length === 0 && (
+                        <div className="p-8 text-center text-gray-500">
+                            No employees found. Add your first employee above.
+                        </div>
+                    )}
+
+                    {/* Table */}
+                    {!loading && !error && employees.length > 0 && (
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Employee ID
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Full Name
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Email
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Department
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                    {employees.map((emp) => (
+                                        <tr key={emp.id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 text-sm text-gray-900">
+                                                {emp.employee_id}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-900">
+                                                {emp.full_name}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-600">
+                                                {emp.email}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-600">
+                                                {emp.department}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm">
+                                                <button
+                                                    onClick={() => handleDelete(emp.employee_id)}
+                                                    className="text-red-600 hover:text-red-800"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </main>
+    )
+}
