@@ -16,8 +16,8 @@ export default function RootLayout({ children }) {
             <body className="flex min-h-screen" suppressHydrationWarning>
                 {/* Global Sidebar - visible on all pages */}
                 <Sidebar />
-                {/* Main content area */}
-                <div className="flex-1">
+                {/* Main content area - full width on mobile */}
+                <div className="flex-1 w-full lg:w-auto">
                     {children}
                 </div>
             </body>

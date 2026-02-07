@@ -92,15 +92,15 @@ export default function Dashboard() {
         <main className="min-h-screen bg-gray-50">
             {/* Header */}
             <header className="bg-white shadow-sm">
-                <div className="max-w-4xl mx-auto px-4 py-6">
-                    <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-                    <p className="text-gray-600 mt-1">
+                <div className="max-w-4xl mx-auto px-4 py-4 lg:py-6">
+                    <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Dashboard</h1>
+                    <p className="text-sm lg:text-base text-gray-600 mt-1">
                         Today&apos;s Overview {displayDate ? `- ${displayDate}` : ''}
                     </p>
                 </div>
             </header>
 
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-4 lg:py-8">
                 {/* Loading State */}
                 {loading && (
                     <div className="text-center text-gray-500 py-8">
@@ -124,30 +124,30 @@ export default function Dashboard() {
                 {/* Dashboard Content */}
                 {!loading && !error && (
                     <>
-                        {/* KPI Cards */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        {/* KPI Cards - 2 columns on mobile, 4 on desktop */}
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
                             {kpiCards.map((kpi) => (
                                 <div
                                     key={kpi.label}
-                                    className={`p-4 rounded-lg border ${colorClasses[kpi.color]}`}
+                                    className={`p-3 lg:p-4 rounded-lg border ${colorClasses[kpi.color]}`}
                                 >
-                                    <div className="text-2xl mb-1">{kpi.icon}</div>
-                                    <div className="text-2xl font-bold">{kpi.value}</div>
-                                    <div className="text-sm opacity-80">{kpi.label}</div>
+                                    <div className="text-xl lg:text-2xl mb-1">{kpi.icon}</div>
+                                    <div className="text-xl lg:text-2xl font-bold">{kpi.value}</div>
+                                    <div className="text-xs lg:text-sm opacity-80">{kpi.label}</div>
                                 </div>
                             ))}
                         </div>
 
                         {/* Quick Actions */}
-                        <h2 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <h2 className="text-base lg:text-lg font-semibold text-gray-800 mb-3 lg:mb-4">Quick Actions</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
                             {/* Add Employee */}
                             <Link href="/employees" className="block">
-                                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all">
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all">
+                                    <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1 lg:mb-2">
                                         ➕ Add Employee
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-sm lg:text-base text-gray-600">
                                         Add new employees to the system
                                     </p>
                                 </div>
@@ -155,11 +155,11 @@ export default function Dashboard() {
 
                             {/* Mark Attendance */}
                             <Link href="/attendance" className="block">
-                                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all">
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all">
+                                    <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1 lg:mb-2">
                                         🕒 Mark Attendance
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-sm lg:text-base text-gray-600">
                                         Record daily attendance for employees
                                     </p>
                                 </div>
@@ -167,12 +167,11 @@ export default function Dashboard() {
                         </div>
 
                         {/* Info Section */}
-                        <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                            <h3 className="font-medium text-blue-900 mb-2">About This Dashboard</h3>
-                            <p className="text-blue-800 text-sm">
+                        <div className="mt-6 lg:mt-8 p-3 lg:p-4 bg-blue-50 rounded-lg border border-blue-100">
+                            <h3 className="font-medium text-blue-900 mb-1 lg:mb-2 text-sm lg:text-base">About This Dashboard</h3>
+                            <p className="text-blue-800 text-xs lg:text-sm">
                                 This dashboard shows today&apos;s attendance data only.
                                 KPIs are calculated in real-time from your employee and attendance records.
-                                For historical data, check individual employee records.
                             </p>
                         </div>
                     </>

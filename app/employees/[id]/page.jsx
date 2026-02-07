@@ -61,9 +61,9 @@ export default function EmployeeRecordsPage({ params }) {
 
     // KPI card configuration
     const kpiCards = [
-        { label: 'Total Days Marked', value: totalDaysMarked, color: 'blue', icon: '📅' },
-        { label: 'Total Present', value: totalPresent, color: 'green', icon: '✓' },
-        { label: 'Total Absent', value: totalAbsent, color: 'red', icon: '✗' },
+        { label: 'Total Days', value: totalDaysMarked, color: 'blue', icon: '📅' },
+        { label: 'Present', value: totalPresent, color: 'green', icon: '✓' },
+        { label: 'Absent', value: totalAbsent, color: 'red', icon: '✗' },
     ]
 
     const colorClasses = {
@@ -76,22 +76,25 @@ export default function EmployeeRecordsPage({ params }) {
         <main className="min-h-screen bg-gray-50">
             {/* Header */}
             <header className="bg-white shadow-sm">
-                <div className="max-w-4xl mx-auto px-4 py-6">
+                <div className="max-w-4xl mx-auto px-4 py-4 lg:py-6">
                     <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
+                        <div className="min-w-0 flex-1">
+                            <h1 className="text-xl lg:text-2xl font-bold text-gray-900 truncate">
                                 {loading ? 'Loading...' : employee?.full_name || 'Employee Records'}
                             </h1>
-                            <p className="text-gray-600 mt-1">Employee attendance history</p>
+                            <p className="text-sm lg:text-base text-gray-600 mt-1">Employee attendance history</p>
                         </div>
-                        <Link href="/employees" className="text-blue-600 hover:text-blue-800">
-                            ← Back to Employees
+                        <Link
+                            href="/employees"
+                            className="text-sm lg:text-base text-blue-600 hover:text-blue-800 ml-4 whitespace-nowrap"
+                        >
+                            ← Back
                         </Link>
                     </div>
                 </div>
             </header>
 
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-4 lg:py-8">
                 {/* Loading State */}
                 {loading && (
                     <div className="text-center text-gray-500 py-8">
@@ -116,47 +119,47 @@ export default function EmployeeRecordsPage({ params }) {
                 {!loading && !error && employee && (
                     <>
                         {/* Employee Info Card */}
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
-                            <h2 className="text-lg font-semibold text-gray-800 mb-4">Employee Information</h2>
-                            <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+                            <h2 className="text-base lg:text-lg font-semibold text-gray-800 mb-4">Employee Information</h2>
+                            <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-sm text-gray-500">Employee ID</p>
-                                    <p className="text-gray-900 font-medium">{employee.employee_id}</p>
+                                    <p className="text-xs lg:text-sm text-gray-500">Employee ID</p>
+                                    <p className="text-sm lg:text-base text-gray-900 font-medium">{employee.employee_id}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Full Name</p>
-                                    <p className="text-gray-900 font-medium">{employee.full_name}</p>
+                                    <p className="text-xs lg:text-sm text-gray-500">Full Name</p>
+                                    <p className="text-sm lg:text-base text-gray-900 font-medium">{employee.full_name}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Email</p>
-                                    <p className="text-gray-900 font-medium">{employee.email}</p>
+                                    <p className="text-xs lg:text-sm text-gray-500">Email</p>
+                                    <p className="text-sm lg:text-base text-gray-900 font-medium break-all">{employee.email}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Department</p>
-                                    <p className="text-gray-900 font-medium">{employee.department}</p>
+                                    <p className="text-xs lg:text-sm text-gray-500">Department</p>
+                                    <p className="text-sm lg:text-base text-gray-900 font-medium">{employee.department}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* KPI Cards */}
-                        <h2 className="text-lg font-semibold text-gray-800 mb-4">Attendance Summary</h2>
-                        <div className="grid grid-cols-3 gap-4 mb-6">
+                        <h2 className="text-base lg:text-lg font-semibold text-gray-800 mb-3 lg:mb-4">Attendance Summary</h2>
+                        <div className="grid grid-cols-3 gap-3 lg:gap-4 mb-6">
                             {kpiCards.map((kpi) => (
                                 <div
                                     key={kpi.label}
-                                    className={`p-4 rounded-lg border ${colorClasses[kpi.color]}`}
+                                    className={`p-3 lg:p-4 rounded-lg border ${colorClasses[kpi.color]}`}
                                 >
-                                    <div className="text-2xl mb-1">{kpi.icon}</div>
-                                    <div className="text-2xl font-bold">{kpi.value}</div>
-                                    <div className="text-sm opacity-80">{kpi.label}</div>
+                                    <div className="text-xl lg:text-2xl mb-1">{kpi.icon}</div>
+                                    <div className="text-xl lg:text-2xl font-bold">{kpi.value}</div>
+                                    <div className="text-xs lg:text-sm opacity-80">{kpi.label}</div>
                                 </div>
                             ))}
                         </div>
 
                         {/* Attendance Table */}
                         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                            <div className="px-6 py-4 border-b border-gray-200">
-                                <h2 className="text-lg font-semibold text-gray-800">Attendance History</h2>
+                            <div className="px-4 lg:px-6 py-4 border-b border-gray-200">
+                                <h2 className="text-base lg:text-lg font-semibold text-gray-800">Attendance History</h2>
                             </div>
 
                             {attendance.length === 0 ? (
@@ -164,44 +167,70 @@ export default function EmployeeRecordsPage({ params }) {
                                     No attendance records found for this employee.
                                 </div>
                             ) : (
-                                <div className="overflow-x-auto">
-                                    <table className="w-full">
-                                        <thead className="bg-gray-50">
-                                            <tr>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                                    Date
-                                                </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                                    Status
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-200">
-                                            {attendance.map((record) => (
-                                                <tr key={record.id} className="hover:bg-gray-50">
-                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                        {new Date(record.date).toLocaleDateString('en-US', {
-                                                            weekday: 'short',
-                                                            year: 'numeric',
-                                                            month: 'short',
-                                                            day: 'numeric'
-                                                        })}
-                                                    </td>
-                                                    <td className="px-6 py-4 text-sm">
-                                                        <span
-                                                            className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${record.status === 'Present'
-                                                                    ? 'bg-green-100 text-green-800'
-                                                                    : 'bg-red-100 text-red-800'
-                                                                }`}
-                                                        >
-                                                            {record.status}
-                                                        </span>
-                                                    </td>
+                                <>
+                                    {/* Mobile: Compact list */}
+                                    <div className="lg:hidden divide-y divide-gray-200">
+                                        {attendance.map((record) => (
+                                            <div key={record.id} className="p-4 flex justify-between items-center">
+                                                <span className="text-sm text-gray-900">
+                                                    {new Date(record.date).toLocaleDateString('en-US', {
+                                                        weekday: 'short',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })}
+                                                </span>
+                                                <span
+                                                    className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${record.status === 'Present'
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : 'bg-red-100 text-red-800'
+                                                        }`}
+                                                >
+                                                    {record.status}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Desktop: Table */}
+                                    <div className="hidden lg:block overflow-x-auto">
+                                        <table className="w-full">
+                                            <thead className="bg-gray-50">
+                                                <tr>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                                        Date
+                                                    </th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                                        Status
+                                                    </th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-200">
+                                                {attendance.map((record) => (
+                                                    <tr key={record.id} className="hover:bg-gray-50">
+                                                        <td className="px-6 py-4 text-sm text-gray-900">
+                                                            {new Date(record.date).toLocaleDateString('en-US', {
+                                                                weekday: 'short',
+                                                                year: 'numeric',
+                                                                month: 'short',
+                                                                day: 'numeric'
+                                                            })}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-sm">
+                                                            <span
+                                                                className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${record.status === 'Present'
+                                                                        ? 'bg-green-100 text-green-800'
+                                                                        : 'bg-red-100 text-red-800'
+                                                                    }`}
+                                                            >
+                                                                {record.status}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </>
                             )}
                         </div>
                     </>

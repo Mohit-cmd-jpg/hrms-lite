@@ -135,29 +135,25 @@ export default function EmployeesPage() {
         <main className="min-h-screen bg-gray-50">
             {/* Header */}
             <header className="bg-white shadow-sm">
-                <div className="max-w-4xl mx-auto px-4 py-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Employees</h1>
-                            <p className="text-gray-600 mt-1">Manage employee records</p>
-                        </div>
-                    </div>
+                <div className="max-w-4xl mx-auto px-4 py-4 lg:py-6">
+                    <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Employees</h1>
+                    <p className="text-sm lg:text-base text-gray-600 mt-1">Manage employee records</p>
                 </div>
             </header>
 
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-4 lg:py-8">
                 {/* Add Employee Form */}
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-4">Add New Employee</h2>
+                <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm border border-gray-200 mb-6 lg:mb-8">
+                    <h2 className="text-base lg:text-lg font-semibold text-gray-800 mb-4">Add New Employee</h2>
 
                     {formError && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded">
+                        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded text-sm">
                             {formError}
                         </div>
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Full Name
@@ -168,7 +164,7 @@ export default function EmployeesPage() {
                                     value={formData.full_name}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm lg:text-base"
                                     placeholder="Enter full name"
                                 />
                             </div>
@@ -183,14 +179,14 @@ export default function EmployeesPage() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm lg:text-base"
                                     placeholder="name@gmail.com"
                                 />
                             </div>
                         </div>
 
                         {/* Department Selection */}
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Department
@@ -200,7 +196,7 @@ export default function EmployeesPage() {
                                     value={formData.department}
                                     onChange={handleChange}
                                     disabled={useCustomDept}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed text-sm lg:text-base"
                                 >
                                     <option value="">Select Department</option>
                                     {DEFAULT_DEPARTMENTS.map((dept) => (
@@ -214,7 +210,7 @@ export default function EmployeesPage() {
                             {/* Custom Department Option */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Or Add Custom Department
+                                    Or Add Custom
                                 </label>
                                 <div className="flex gap-2">
                                     <input
@@ -229,8 +225,8 @@ export default function EmployeesPage() {
                                             }
                                         }}
                                         onFocus={() => setUseCustomDept(true)}
-                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Enter custom department"
+                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm lg:text-base"
+                                        placeholder="Custom department"
                                     />
                                     {useCustomDept && (
                                         <button
@@ -255,7 +251,7 @@ export default function EmployeesPage() {
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
+                                className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-sm lg:text-base"
                             >
                                 {submitting ? 'Adding...' : 'Add Employee'}
                             </button>
@@ -265,8 +261,8 @@ export default function EmployeesPage() {
 
                 {/* Employees Table */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div className="px-6 py-4 border-b border-gray-200">
-                        <h2 className="text-lg font-semibold text-gray-800">All Employees</h2>
+                    <div className="px-4 lg:px-6 py-4 border-b border-gray-200">
+                        <h2 className="text-base lg:text-lg font-semibold text-gray-800">All Employees</h2>
                     </div>
 
                     {/* Loading State */}
@@ -296,63 +292,98 @@ export default function EmployeesPage() {
                         </div>
                     )}
 
-                    {/* Table */}
+                    {/* Mobile Card View */}
                     {!loading && !error && employees.length > 0 && (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Employee ID
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Full Name
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Email
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Department
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200">
-                                    {employees.map((emp) => (
-                                        <tr key={emp.id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 text-sm text-gray-900">
-                                                {emp.employee_id}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900">
-                                                {emp.full_name}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">
-                                                {emp.email}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">
+                        <>
+                            {/* Mobile: Card layout */}
+                            <div className="lg:hidden divide-y divide-gray-200">
+                                {employees.map((emp) => (
+                                    <div key={emp.id} className="p-4">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div>
+                                                <p className="font-medium text-gray-900">{emp.full_name}</p>
+                                                <p className="text-xs text-gray-500">{emp.employee_id}</p>
+                                            </div>
+                                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
                                                 {emp.department}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm space-x-3">
-                                                <Link
-                                                    href={`/employees/${emp.employee_id}`}
-                                                    className="text-blue-600 hover:text-blue-800"
-                                                >
-                                                    View
-                                                </Link>
-                                                <button
-                                                    onClick={() => handleDelete(emp.employee_id)}
-                                                    className="text-red-600 hover:text-red-800"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </td>
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-gray-600 mb-3">{emp.email}</p>
+                                        <div className="flex gap-4">
+                                            <Link
+                                                href={`/employees/${emp.employee_id}`}
+                                                className="text-sm text-blue-600 hover:text-blue-800"
+                                            >
+                                                View Details
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(emp.employee_id)}
+                                                className="text-sm text-red-600 hover:text-red-800"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Desktop: Table layout */}
+                            <div className="hidden lg:block overflow-x-auto">
+                                <table className="w-full">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                                Employee ID
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                                Full Name
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                                Email
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                                Department
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                                Actions
+                                            </th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200">
+                                        {employees.map((emp) => (
+                                            <tr key={emp.id} className="hover:bg-gray-50">
+                                                <td className="px-6 py-4 text-sm text-gray-900">
+                                                    {emp.employee_id}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-900">
+                                                    {emp.full_name}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    {emp.email}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    {emp.department}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm space-x-3">
+                                                    <Link
+                                                        href={`/employees/${emp.employee_id}`}
+                                                        className="text-blue-600 hover:text-blue-800"
+                                                    >
+                                                        View
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => handleDelete(emp.employee_id)}
+                                                        className="text-red-600 hover:text-red-800"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
