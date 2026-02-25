@@ -23,8 +23,10 @@ A minimal, production-ready Human Resource Management System built with Next.js 
 | Technology | Purpose |
 |------------|---------|
 | Next.js 16 (App Router) | Frontend + API Routes |
+| TypeScript | Type safety |
 | Supabase | PostgreSQL Database |
 | Tailwind CSS | Styling |
+| Zod | API validation |
 | Vercel | Deployment |
 
 ## 📦 Project Structure
@@ -33,13 +35,17 @@ A minimal, production-ready Human Resource Management System built with Next.js 
 /hrms
 ├── app/
 │   ├── api/
-│   │   ├── employees/route.js   # Employee CRUD API
-│   │   └── attendance/route.js  # Attendance API
-│   ├── employees/page.jsx       # Employee management UI
-│   ├── attendance/page.jsx      # Attendance tracking UI
-│   └── page.jsx                 # Home page
+│   │   ├── employees/route.ts   # Employee CRUD API
+│   │   └── attendance/route.ts  # Attendance API
+│   ├── employees/page.tsx       # Employee management UI
+│   ├── attendance/page.tsx      # Attendance tracking UI
+│   └── page.tsx                # Home page
+├── components/                 # Reusable UI components
 ├── lib/
-│   └── supabase.js              # Supabase client
+│   ├── supabase.ts             # Supabase client
+│   ├── types.ts                # TypeScript interfaces
+│   ├── useEmployees.ts         # Employee data hook
+│   └── useAttendance.ts       # Attendance data hook
 └── README.md
 ```
 
