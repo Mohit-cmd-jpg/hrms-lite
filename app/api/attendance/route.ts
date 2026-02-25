@@ -1,10 +1,14 @@
-// Attendance API Route - Handles attendance tracking
-// Endpoints: GET (list attendance), POST (mark attendance)
 import { supabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
-// GET - Fetch attendance records, optionally filtered by employee_id
-export async function GET(request) {
+const createAttendanceSchema = z.object({
+    employee_id: z.string().min(1, 'Employee ID is required'),
+    date: z.string().min(1, 'Date is required'),
+    status: z.enum(['Present', 'Absent'])
+})
+
+export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
         const employee_id = searchParams.get('employee_id')
@@ -14,7 +18,6 @@ export async function GET(request) {
             .select('*')
             .order('date', { ascending: false })
 
-        // Filter by employee if specified
         if (employee_id) {
             query = query.eq('employee_id', employee_id)
         }
@@ -26,46 +29,30 @@ export async function GET(request) {
         }
 
         return NextResponse.json(data)
-    } catch (err) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch attendance' }, { status: 500 })
     }
 }
 
-// POST - Mark attendance for an employee
-export async function POST(request) {
+export async function POST(request: Request) {
     try {
         const body = await request.json()
-        const { employee_id, date, status } = body
+        const result = createAttendanceSchema.safeParse(body)
 
-        // Validate required fields
-        if (!employee_id || !date || !status) {
-            return NextResponse.json(
-                { error: 'All fields are required: employee_id, date, status' },
-                { status: 400 }
-            )
+        if (!result.success) {
+            const errors = result.error.issues.map(i => i.message).join(', ')
+            return NextResponse.json({ error: errors }, { status: 400 })
         }
 
-        // Validate status value
-        if (status !== 'Present' && status !== 'Absent') {
-            return NextResponse.json(
-                { error: 'Status must be either "Present" or "Absent"' },
-                { status: 400 }
-            )
-        }
+        const { employee_id, date, status } = result.data
 
-        // Use upsert to handle both new records and updates for same employee+date
-        // Why upsert: If attendance for that date exists, update it; otherwise, create new
         const { data, error } = await supabase
             .from('attendance')
-            .upsert(
-                [{ employee_id, date, status }],
-                { onConflict: 'employee_id,date' }
-            )
+            .upsert([{ employee_id, date, status }], { onConflict: 'employee_id,date' })
             .select()
             .single()
 
         if (error) {
-            // Check for foreign key violation (employee doesn't exist)
             if (error.code === '23503') {
                 return NextResponse.json({ error: 'Employee not found' }, { status: 404 })
             }
@@ -73,7 +60,7 @@ export async function POST(request) {
         }
 
         return NextResponse.json(data, { status: 201 })
-    } catch (err) {
+    } catch {
         return NextResponse.json({ error: 'Failed to mark attendance' }, { status: 500 })
     }
 }

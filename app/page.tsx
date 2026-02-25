@@ -1,28 +1,19 @@
-// Dashboard Page - Main landing page with KPI cards
-// Why: Dashboard focuses on TODAY's data only to keep it simple and interview-explainable
-// KPIs are calculated client-side to avoid complex SQL and keep backend logic minimal
 'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import type { Employee, Attendance } from '@/lib/types'
 
 export default function Dashboard() {
-    // State for dashboard data
-    const [employees, setEmployees] = useState([])
-    const [attendance, setAttendance] = useState([])
+    const [employees, setEmployees] = useState<Employee[]>([])
+    const [attendance, setAttendance] = useState<Attendance[]>([])
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
-
-    // Store today's date in state to avoid hydration mismatch
-    // Why: Date.now() differs between server and client, causing React hydration errors
+    const [error, setError] = useState<string | null>(null)
     const [today, setToday] = useState('')
     const [displayDate, setDisplayDate] = useState('')
 
-    // Set today's date on client-side only to avoid hydration mismatch
-    // Use local date format (YYYY-MM-DD) to match database format
     useEffect(() => {
         const now = new Date()
-        // Format as YYYY-MM-DD in local timezone (not UTC)
         const year = now.getFullYear()
         const month = String(now.getMonth() + 1).padStart(2, '0')
         const day = String(now.getDate()).padStart(2, '0')
@@ -30,7 +21,6 @@ export default function Dashboard() {
         setDisplayDate(now.toLocaleDateString())
     }, [])
 
-    // Fetch data after today is set
     useEffect(() => {
         if (today) {
             fetchDashboardData()
@@ -42,7 +32,6 @@ export default function Dashboard() {
             setLoading(true)
             setError(null)
 
-            // Fetch employees and attendance in parallel using existing APIs
             const [empRes, attRes] = await Promise.all([
                 fetch('/api/employees'),
                 fetch('/api/attendance')
@@ -57,35 +46,29 @@ export default function Dashboard() {
             setEmployees(empData)
             setAttendance(attData)
         } catch (err) {
-            setError(err.message)
+            setError(err instanceof Error ? err.message : 'An error occurred')
         } finally {
             setLoading(false)
         }
     }
 
-    // Calculate KPIs - simple client-side filtering
-    // Why client-side: Avoids adding new API endpoints, keeps it simple for interviews
     const totalEmployees = employees.length
 
-    // Filter today's attendance records
     const todayAttendance = attendance.filter(record => record.date === today)
     const todayPresent = todayAttendance.filter(record => record.status === 'Present').length
     const todayAbsent = todayAttendance.filter(record => record.status === 'Absent').length
 
-    // Calculate attendance rate (avoid division by zero)
     const attendanceRate = totalEmployees > 0
         ? Math.round((todayPresent / totalEmployees) * 100)
         : 0
 
-    // KPI card configuration for easy rendering
     const kpiCards = [
-        { label: 'Total Employees', value: totalEmployees, color: 'blue', icon: '👥' },
-        { label: 'Today Present', value: todayPresent, color: 'green', icon: '✓' },
-        { label: 'Today Absent', value: todayAbsent, color: 'red', icon: '✗' },
-        { label: 'Attendance Rate', value: `${attendanceRate}%`, color: 'purple', icon: '📊' },
+        { label: 'Total Employees', value: totalEmployees, color: 'blue' as const, icon: '👥' },
+        { label: 'Today Present', value: todayPresent, color: 'green' as const, icon: '✓' },
+        { label: 'Today Absent', value: todayAbsent, color: 'red' as const, icon: '✗' },
+        { label: 'Attendance Rate', value: `${attendanceRate}%`, color: 'purple' as const, icon: '📊' },
     ]
 
-    // Color mapping for KPI cards
     const colorClasses = {
         blue: 'bg-blue-50 border-blue-200 text-blue-700',
         green: 'bg-green-50 border-green-200 text-green-700',
@@ -95,7 +78,6 @@ export default function Dashboard() {
 
     return (
         <main className="min-h-screen bg-gray-50">
-            {/* Header */}
             <header className="bg-white shadow-sm">
                 <div className="max-w-4xl mx-auto px-4 py-4 lg:py-6">
                     <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Dashboard</h1>
@@ -106,36 +88,26 @@ export default function Dashboard() {
             </header>
 
             <div className="max-w-4xl mx-auto px-4 py-4 lg:py-8">
-                {/* Loading State */}
                 {loading && (
                     <div className="text-center text-gray-500 py-8">
                         Loading dashboard...
                     </div>
                 )}
 
-                {/* Error State */}
                 {error && !loading && (
                     <div className="text-center py-8">
                         <p className="text-red-600 mb-4">{error}</p>
-                        <button
-                            onClick={fetchDashboardData}
-                            className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-                        >
+                        <button onClick={fetchDashboardData} className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
                             Try Again
                         </button>
                     </div>
                 )}
 
-                {/* Dashboard Content */}
                 {!loading && !error && (
                     <>
-                        {/* KPI Cards - 2 columns on mobile, 4 on desktop */}
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
                             {kpiCards.map((kpi) => (
-                                <div
-                                    key={kpi.label}
-                                    className={`p-3 lg:p-4 rounded-lg border ${colorClasses[kpi.color]}`}
-                                >
+                                <div key={kpi.label} className={`p-3 lg:p-4 rounded-lg border ${colorClasses[kpi.color]}`}>
                                     <div className="text-xl lg:text-2xl mb-1">{kpi.icon}</div>
                                     <div className="text-xl lg:text-2xl font-bold">{kpi.value}</div>
                                     <div className="text-xs lg:text-sm opacity-80">{kpi.label}</div>
@@ -143,10 +115,8 @@ export default function Dashboard() {
                             ))}
                         </div>
 
-                        {/* Quick Actions */}
                         <h2 className="text-base lg:text-lg font-semibold text-gray-800 mb-3 lg:mb-4">Quick Actions</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
-                            {/* Add Employee */}
                             <Link href="/employees" className="block">
                                 <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all">
                                     <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1 lg:mb-2">
@@ -158,7 +128,6 @@ export default function Dashboard() {
                                 </div>
                             </Link>
 
-                            {/* Mark Attendance */}
                             <Link href="/attendance" className="block">
                                 <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all">
                                     <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1 lg:mb-2">
@@ -171,7 +140,6 @@ export default function Dashboard() {
                             </Link>
                         </div>
 
-                        {/* Info Section */}
                         <div className="mt-6 lg:mt-8 p-3 lg:p-4 bg-blue-50 rounded-lg border border-blue-100">
                             <h3 className="font-medium text-blue-900 mb-1 lg:mb-2 text-sm lg:text-base">About This Dashboard</h3>
                             <p className="text-blue-800 text-xs lg:text-sm">

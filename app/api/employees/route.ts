@@ -1,9 +1,13 @@
-// Employee API Route - Handles all employee CRUD operations
-// Endpoints: GET (list all), POST (create), DELETE (remove)
 import { supabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
-// GET - Fetch all employees
+const createEmployeeSchema = z.object({
+    full_name: z.string().min(1, 'Full name is required'),
+    email: z.string().email('Invalid email format'),
+    department: z.string().min(1, 'Department is required')
+})
+
 export async function GET() {
     try {
         const { data, error } = await supabase
@@ -16,37 +20,27 @@ export async function GET() {
         }
 
         return NextResponse.json(data)
-    } catch (err) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch employees' }, { status: 500 })
     }
 }
 
-// POST - Create a new employee
-export async function POST(request) {
+export async function POST(request: Request) {
     try {
         const body = await request.json()
-        const { full_name, email, department } = body
+        const result = createEmployeeSchema.safeParse(body)
 
-        // Validate required fields (employee_id is now auto-generated)
-        if (!full_name || !email || !department) {
-            return NextResponse.json(
-                { error: 'All fields are required: full_name, email, department' },
-                { status: 400 }
-            )
+        if (!result.success) {
+            const errors = result.error.issues.map(i => i.message).join(', ')
+            return NextResponse.json({ error: errors }, { status: 400 })
         }
 
-        // Validate email format using simple regex
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(email)) {
-            return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
-        }
+        const { full_name, email, department } = result.data
 
-        // Auto-generate employee_id in format EMP-XXXX
         const timestamp = Date.now().toString(36).toUpperCase()
         const random = Math.random().toString(36).substring(2, 6).toUpperCase()
         const employee_id = `EMP-${timestamp.slice(-4)}${random}`
 
-        // Insert the employee
         const { data, error } = await supabase
             .from('employees')
             .insert([{ employee_id, full_name, email, department }])
@@ -54,7 +48,6 @@ export async function POST(request) {
             .single()
 
         if (error) {
-            // Check if it's a duplicate employee_id error (retry with new ID)
             if (error.code === '23505') {
                 return NextResponse.json({ error: 'Please try again' }, { status: 409 })
             }
@@ -62,13 +55,12 @@ export async function POST(request) {
         }
 
         return NextResponse.json(data, { status: 201 })
-    } catch (err) {
+    } catch {
         return NextResponse.json({ error: 'Failed to create employee' }, { status: 500 })
     }
 }
 
-// DELETE - Remove an employee by employee_id
-export async function DELETE(request) {
+export async function DELETE(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
         const employee_id = searchParams.get('employee_id')
@@ -87,7 +79,7 @@ export async function DELETE(request) {
         }
 
         return NextResponse.json({ message: 'Employee deleted successfully' })
-    } catch (err) {
+    } catch {
         return NextResponse.json({ error: 'Failed to delete employee' }, { status: 500 })
     }
 }
