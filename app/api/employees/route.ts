@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabase, initSupabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -10,6 +10,11 @@ const createEmployeeSchema = z.object({
 
 export async function GET() {
     try {
+        const client = initSupabase()
+        if (!client) {
+            return NextResponse.json({ error: 'Supabase not configured. Check environment variables.' }, { status: 500 })
+        }
+
         const { data, error } = await supabase
             .from('employees')
             .select('*')
@@ -20,13 +25,19 @@ export async function GET() {
         }
 
         return NextResponse.json(data)
-    } catch {
-        return NextResponse.json({ error: 'Failed to fetch employees' }, { status: 500 })
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch employees'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }
 
 export async function POST(request: Request) {
     try {
+        const client = initSupabase()
+        if (!client) {
+            return NextResponse.json({ error: 'Supabase not configured. Check environment variables.' }, { status: 500 })
+        }
+
         const body = await request.json()
         const result = createEmployeeSchema.safeParse(body)
 
@@ -55,13 +66,19 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json(data, { status: 201 })
-    } catch {
-        return NextResponse.json({ error: 'Failed to create employee' }, { status: 500 })
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to create employee'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }
 
 export async function DELETE(request: Request) {
     try {
+        const client = initSupabase()
+        if (!client) {
+            return NextResponse.json({ error: 'Supabase not configured. Check environment variables.' }, { status: 500 })
+        }
+
         const { searchParams } = new URL(request.url)
         const employee_id = searchParams.get('employee_id')
 
@@ -79,7 +96,8 @@ export async function DELETE(request: Request) {
         }
 
         return NextResponse.json({ message: 'Employee deleted successfully' })
-    } catch {
-        return NextResponse.json({ error: 'Failed to delete employee' }, { status: 500 })
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to delete employee'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }

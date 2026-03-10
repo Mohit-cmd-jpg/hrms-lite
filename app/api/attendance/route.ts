@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabase, initSupabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -10,6 +10,11 @@ const createAttendanceSchema = z.object({
 
 export async function GET(request: Request) {
     try {
+        const client = initSupabase()
+        if (!client) {
+            return NextResponse.json({ error: 'Supabase not configured. Check environment variables.' }, { status: 500 })
+        }
+
         const { searchParams } = new URL(request.url)
         const employee_id = searchParams.get('employee_id')
 
@@ -29,13 +34,19 @@ export async function GET(request: Request) {
         }
 
         return NextResponse.json(data)
-    } catch {
-        return NextResponse.json({ error: 'Failed to fetch attendance' }, { status: 500 })
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch attendance'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }
 
 export async function POST(request: Request) {
     try {
+        const client = initSupabase()
+        if (!client) {
+            return NextResponse.json({ error: 'Supabase not configured. Check environment variables.' }, { status: 500 })
+        }
+
         const body = await request.json()
         const result = createAttendanceSchema.safeParse(body)
 
@@ -60,7 +71,8 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json(data, { status: 201 })
-    } catch {
-        return NextResponse.json({ error: 'Failed to mark attendance' }, { status: 500 })
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to mark attendance'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }
