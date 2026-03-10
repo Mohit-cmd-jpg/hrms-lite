@@ -29,8 +29,13 @@ export function initSupabase(): SupabaseClient | null {
         return null
     }
     
-    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey)
-    return supabaseInstance
+    try {
+        supabaseInstance = createClient(supabaseUrl, supabaseAnonKey)
+        return supabaseInstance
+    } catch (error) {
+        console.error('Failed to initialize Supabase:', error)
+        return null
+    }
 }
 
 // Initialize on module load
