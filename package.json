@@ -70,6 +70,6 @@
     "storybook": "^10.2.19",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.6",
-    "typescript": "^5"
+    "typescript": "^6"
   }
 }
