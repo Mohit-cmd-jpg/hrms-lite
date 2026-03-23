@@ -1,0 +1,47 @@
+@import 'tailwindcss';
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Force light mode for this app - avoid dark mode text visibility issues */
+body {
+  background: #f9fafb;
+  color: #171717;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Ensure form inputs always have dark text on light background */
+input,
+select,
+textarea {
+  color: #171717 !important;
+  background-color: #ffffff !important;
+}
+
+input::placeholder {
+  color: #9ca3af !important;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}

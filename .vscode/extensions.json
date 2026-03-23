@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "github.copilot",
+    "github.copilot-chat",
+    "codeium.codeium",
+    "tabnine.tabnine-vscode",
+    "sonarsource.sonarlint-vscode",
+    "ms-playwright.playwright",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+    "figma.figma-vscode-extension"
+  ]
+}

@@ -1,0 +1,160 @@
+'use client'
+
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
+
+import type { Employee, Attendance } from '@/lib/types'
+
+export default function Dashboard() {
+  const [employees, setEmployees] = useState<Employee[]>([])
+  const [attendance, setAttendance] = useState<Attendance[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [today, setToday] = useState('')
+  const [displayDate, setDisplayDate] = useState('')
+
+  useEffect(() => {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    setToday(`${year}-${month}-${day}`)
+    setDisplayDate(now.toLocaleDateString())
+  }, [])
+
+  useEffect(() => {
+    if (today) {
+      fetchDashboardData()
+    }
+  }, [today])
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const [empRes, attRes] = await Promise.all([
+        fetch('/api/employees'),
+        fetch('/api/attendance'),
+      ])
+
+      const empData = await empRes.json()
+      const attData = await attRes.json()
+
+      if (!empRes.ok) throw new Error(empData.error || 'Failed to fetch employees')
+      if (!attRes.ok) throw new Error(attData.error || 'Failed to fetch attendance')
+
+      setEmployees(empData)
+      setAttendance(attData)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const totalEmployees = employees.length
+
+  const todayAttendance = attendance.filter((record) => record.date === today)
+  const todayPresent = todayAttendance.filter((record) => record.status === 'Present').length
+  const todayAbsent = todayAttendance.filter((record) => record.status === 'Absent').length
+
+  const attendanceRate = totalEmployees > 0 ? Math.round((todayPresent / totalEmployees) * 100) : 0
+
+  const kpiCards = [
+    { label: 'Total Employees', value: totalEmployees, color: 'blue' as const, icon: '👥' },
+    { label: 'Today Present', value: todayPresent, color: 'green' as const, icon: '✓' },
+    { label: 'Today Absent', value: todayAbsent, color: 'red' as const, icon: '✗' },
+    { label: 'Attendance Rate', value: `${attendanceRate}%`, color: 'purple' as const, icon: '📊' },
+  ]
+
+  const colorClasses = {
+    blue: 'bg-blue-50 border-blue-200 text-blue-700',
+    green: 'bg-green-50 border-green-200 text-green-700',
+    red: 'bg-red-50 border-red-200 text-red-700',
+    purple: 'bg-purple-50 border-purple-200 text-purple-700',
+  }
+
+  return (
+    <main className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 py-4 lg:py-6">
+          <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-sm lg:text-base text-gray-600 mt-1">
+            Today&apos;s Overview {displayDate ? `- ${displayDate}` : ''}
+          </p>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto px-4 py-4 lg:py-8">
+        {loading && <div className="text-center text-gray-500 py-8">Loading dashboard...</div>}
+
+        {error && !loading && (
+          <div className="text-center py-8">
+            <p className="text-red-600 mb-4">{error}</p>
+            <button
+              onClick={fetchDashboardData}
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
+              {kpiCards.map((kpi) => (
+                <div
+                  key={kpi.label}
+                  className={`p-3 lg:p-4 rounded-lg border ${colorClasses[kpi.color]}`}
+                >
+                  <div className="text-xl lg:text-2xl mb-1">{kpi.icon}</div>
+                  <div className="text-xl lg:text-2xl font-bold">{kpi.value}</div>
+                  <div className="text-xs lg:text-sm opacity-80">{kpi.label}</div>
+                </div>
+              ))}
+            </div>
+
+            <h2 className="text-base lg:text-lg font-semibold text-gray-800 mb-3 lg:mb-4">
+              Quick Actions
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
+              <Link href="/employees" className="block">
+                <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all">
+                  <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1 lg:mb-2">
+                    ➕ Add Employee
+                  </h3>
+                  <p className="text-sm lg:text-base text-gray-600">
+                    Add new employees to the system
+                  </p>
+                </div>
+              </Link>
+
+              <Link href="/attendance" className="block">
+                <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all">
+                  <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1 lg:mb-2">
+                    🕒 Mark Attendance
+                  </h3>
+                  <p className="text-sm lg:text-base text-gray-600">
+                    Record daily attendance for employees
+                  </p>
+                </div>
+              </Link>
+            </div>
+
+            <div className="mt-6 lg:mt-8 p-3 lg:p-4 bg-blue-50 rounded-lg border border-blue-100">
+              <h3 className="font-medium text-blue-900 mb-1 lg:mb-2 text-sm lg:text-base">
+                About This Dashboard
+              </h3>
+              <p className="text-blue-800 text-xs lg:text-sm">
+                This dashboard shows today&apos;s attendance data only. KPIs are calculated in
+                real-time from your employee and attendance records.
+              </p>
+            </div>
+          </>
+        )}
+      </div>
+    </main>
+  )
+}

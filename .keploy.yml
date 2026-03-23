@@ -1,0 +1,15 @@
+version: api.keploy.io/v1beta1
+kind: Config
+metadata:
+  name: hrms
+spec:
+  app:
+    port: 3000
+    command: npm run dev
+  test:
+    path: ./keploy
+    globalNoise:
+      body: []
+      header:
+        - date
+        - etag
