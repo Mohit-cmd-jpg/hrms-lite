@@ -98,6 +98,8 @@ The dashboard provides real-time insights with key metrics and quick actions:
 - Absence tracking
 - Quick access to employee management and attendance marking
 
+![Dashboard Screenshot](/public/screenshots/dashboard.png)
+
 ### Employee Management
 
 Complete employee lifecycle management with form validation:
@@ -108,6 +110,8 @@ Complete employee lifecycle management with form validation:
 - Quick delete action with confirmation
 - Department filtering and search
 
+![Employees Management Screenshot](/public/screenshots/employees.png)
+
 ### Attendance Tracking
 
 Daily attendance management system:
@@ -117,6 +121,8 @@ Daily attendance management system:
 - View attendance history
 - Filter by employee
 - Real-time attendance records
+
+![Attendance Tracking Screenshot](/public/screenshots/attendance.png)
 
 ---
 
