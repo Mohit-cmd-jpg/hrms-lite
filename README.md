@@ -1,6 +1,6 @@
 # 🏢 HRMS - Human Resource Management System
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://hrms-eta-five.vercel.app)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://hrms-mohit.vercel.app/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue)](https://react.dev)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E)](https://supabase.com/)
@@ -27,7 +27,7 @@ A **production-ready** Human Resource Management System built with Next.js 16, R
 
 ## 📲 Live Deployment
 
-- **Production**: [https://hrms-eta-five.vercel.app](https://hrms-eta-five.vercel.app)
+- **Production**: [https://hrms-mohit.vercel.app](https://hrms-mohit.vercel.app)
 - **Repository**: [github.com/Mohit-cmd-jpg/hrms-lite](https://github.com/Mohit-cmd-jpg/hrms-lite)
 
 ---
@@ -87,7 +87,40 @@ A **production-ready** Human Resource Management System built with Next.js 16, R
 
 ---
 
-## 📦 Project Structure
+## � Screenshots
+
+### Dashboard Overview
+
+The dashboard provides real-time insights with key metrics and quick actions:
+
+- Total employees count
+- Daily attendance statistics
+- Absence tracking
+- Quick access to employee management and attendance marking
+
+### Employee Management
+
+Complete employee lifecycle management with form validation:
+
+- Add new employees (Full Name, Email, Department)
+- View all employees in a responsive table
+- Employee ID auto-generation
+- Quick delete action with confirmation
+- Department filtering and search
+
+### Attendance Tracking
+
+Daily attendance management system:
+
+- Mark employee attendance (Present/Absent)
+- Date picker for flexible entry
+- View attendance history
+- Filter by employee
+- Real-time attendance records
+
+---
+
+## �📦 Project Structure
 
 ```
 hrms/
