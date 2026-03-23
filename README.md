@@ -1,61 +1,173 @@
-# HRMS Lite
+# 🏢 HRMS - Human Resource Management System
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://hrms-eta-five.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E)](https://supabase.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)](https://www.typescriptlang.org/)
 [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black)](https://vercel.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-A minimal, production-ready Human Resource Management System built with Next.js and Supabase.
+A **production-ready** Human Resource Management System built with Next.js 16, React 19, TypeScript, and Supabase. Features comprehensive employee management, attendance tracking, and enterprise-grade quality standards.
 
-## 🔗 Live Demo
+---
 
-**🌐 [https://hrms-eta-five.vercel.app](https://hrms-eta-five.vercel.app)**
+## 📲 Live Deployment
 
-## 🎯 Features
+- **Production**: [https://hrms-eta-five.vercel.app](https://hrms-eta-five.vercel.app)
+- **Repository**: [github.com/Mohit-cmd-jpg/hrms-lite](https://github.com/Mohit-cmd-jpg/hrms-lite)
 
-- **Employee Management**: Add, view, and delete employee records
-- **Attendance Tracking**: Mark daily attendance (Present/Absent) for employees
-- **Clean UI**: Professional interface with loading, empty, and error states
+---
+
+## ✨ Features
+
+### 👥 Employee Management
+
+- **Create**: Add new employees with full details (name, email, department)
+- **Read**: View all employees in a responsive table
+- **Delete**: Remove employees with confirmation
+- **Search**: Filter employees by department
+- **Validation**: Zod schema validation for data integrity
+
+### 📅 Attendance Tracking
+
+- **Mark Attendance**: Present/Absent status for each date
+- **Employee Filter**: View attendance by specific employee
+- **Date Picker**: Easy date selection
+- **Unique Constraints**: Prevent duplicate attendance records
+- **History**: View complete attendance history
+
+### 🎨 User Experience
+
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Loading States**: Visual feedback during data fetching
+- **Error Handling**: User-friendly error messages
+- **Empty States**: Clear guidance when no data exists
+- **Toast Notifications**: Real-time success/error feedback
+- **Dark Mode Ready**: Tailwind CSS 4 configuration
+
+### 🔒 Security & Quality
+
+- **Type Safety**: 100% TypeScript with strict mode
+- **Request Validation**: Zod schemas for all endpoints
+- **Error Tracking**: Sentry integration
+- **Security Scanning**: Snyk vulnerability analysis
+- **Testing**: Jest unit + Playwright E2E tests
+- **CI/CD**: GitHub Actions automation
+
+---
 
 ## 🛠️ Tech Stack
 
-| Technology              | Purpose               |
-| ----------------------- | --------------------- |
-| Next.js 16 (App Router) | Frontend + API Routes |
-| TypeScript              | Type safety           |
-| Supabase                | PostgreSQL Database   |
-| Tailwind CSS            | Styling               |
-| Zod                     | API validation        |
-| Vercel                  | Deployment            |
+| Layer          | Technology            | Purpose                |
+| -------------- | --------------------- | ---------------------- |
+| **Frontend**   | React 19 + Next.js 16 | UI & App Shell         |
+| **Language**   | TypeScript 5          | Type Safety            |
+| **Styling**    | Tailwind CSS 4        | Responsive Design      |
+| **API Routes** | Next.js App Router    | Backend                |
+| **Database**   | Supabase (PostgreSQL) | Data Storage           |
+| **Validation** | Zod 4.3.6             | Schema Validation      |
+| **Testing**    | Jest + Playwright     | QA                     |
+| **Monitoring** | Sentry                | Error Tracking         |
+| **Security**   | Snyk                  | Vulnerability Scanning |
+| **Deployment** | Vercel                | Hosting                |
+
+---
 
 ## 📦 Project Structure
 
 ```
-/hrms
-├── app/
+hrms/
+├── app/                              # Next.js App Directory
 │   ├── api/
-│   │   ├── employees/route.ts   # Employee CRUD API
-│   │   └── attendance/route.ts  # Attendance API
-│   ├── employees/page.tsx       # Employee management UI
-│   ├── attendance/page.tsx      # Attendance tracking UI
-│   └── page.tsx                # Home page
-├── components/                 # Reusable UI components
-├── lib/
-│   ├── supabase.ts             # Supabase client
-│   ├── types.ts                # TypeScript interfaces
-│   ├── useEmployees.ts         # Employee data hook
-│   └── useAttendance.ts       # Attendance data hook
-└── README.md
+│   │   ├── employees/route.ts       # Employee CRUD endpoints
+│   │   └── attendance/route.ts      # Attendance endpoints
+│   ├── employees/
+│   │   ├── page.tsx                 # Employee list & create form
+│   │   └── [id]/page.tsx           # Employee detail page
+│   ├── attendance/
+│   │   └── page.tsx                 # Attendance tracker
+│   ├── layout.tsx                   # Root layout
+│   ├── page.tsx                     # Home page
+│   ├── Sidebar.tsx                  # Navigation sidebar
+│   └── globals.css                  # Global styles
+│
+├── lib/                             # Shared Utilities
+│   ├── supabase.ts                 # Supabase client initialization
+│   ├── types.ts                    # TypeScript interfaces
+│   ├── apiUtils.ts                 # API helper functions
+│   ├── useEmployees.ts             # Employee data hook
+│   └── useAttendance.ts            # Attendance data hook
+│
+├── components/                      # Reusable Components
+│   ├── ui.tsx                      # UI component library
+│   ├── Table.tsx                   # Data table component
+│   ├── Toast.tsx                   # Notification component
+│   └── ui.stories.tsx              # Storybook stories
+│
+├── __tests__/                       # Unit Tests
+│   ├── api/
+│   │   ├── employees.route.test.ts
+│   │   └── attendance.route.test.ts
+│   └── lib/
+│       └── apiUtils.test.ts
+│
+├── e2e/                            # End-to-End Tests
+│   └── app.spec.ts                 # Playwright tests
+│
+├── .github/                        # GitHub Configuration
+│   ├── workflows/                  # CI/CD pipelines
+│   └── copilot-instructions.md    # Copilot guidelines
+│
+├── docs/                           # Documentation
+├── setup-database.sql              # Database schema
+├── .env.local.example              # Environment template
+├── jest.config.ts                  # Jest configuration
+├── playwright.config.ts            # Playwright configuration
+├── next.config.ts                  # Next.js configuration
+├── tsconfig.json                   # TypeScript configuration
+└── package.json                    # Dependencies
 ```
 
-## 🗄️ Database Setup
+---
 
-Run this SQL in your Supabase SQL Editor:
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- A Supabase account (free tier available)
+- Git
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/Mohit-cmd-jpg/hrms-lite.git
+cd hrms-lite
+```
+
+### 2️⃣ Install Dependencies
+
+```bash
+npm install
+```
+
+### 3️⃣ Set Up Supabase
+
+#### Create Supabase Project
+
+1. Go to [supabase.com](https://supabase.com)
+2. Create a new project (free tier)
+3. Note your Project URL and Anon Key
+
+#### Initialize Database
+
+Go to **SQL Editor** in your Supabase dashboard and run:
 
 ```sql
 -- Employees table
-CREATE TABLE employees (
+CREATE TABLE IF NOT EXISTS employees (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   employee_id TEXT UNIQUE NOT NULL,
   full_name TEXT NOT NULL,
@@ -65,39 +177,300 @@ CREATE TABLE employees (
 );
 
 -- Attendance table
-CREATE TABLE attendance (
+CREATE TABLE IF NOT EXISTS attendance (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  employee_id TEXT REFERENCES employees(employee_id) ON DELETE CASCADE,
+  employee_id TEXT NOT NULL REFERENCES employees(employee_id) ON DELETE CASCADE,
   date DATE NOT NULL,
   status TEXT NOT NULL CHECK (status IN ('Present', 'Absent')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(employee_id, date)
 );
+
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_attendance_employee_date ON attendance(employee_id, date);
+CREATE INDEX IF NOT EXISTS idx_employees_employee_id ON employees(employee_id);
 ```
 
-## 🚀 Local Development
+#### Disable RLS (for development)
 
-1. **Clone the repository**
+1. In Supabase, go to **Authentication > Policies**
+2. For `employees` table: Disable "Row Level Security" OR Create policy:
+   ```sql
+   CREATE POLICY "Enable read access" ON employees FOR SELECT USING (true);
+   ```
+3. Repeat for `attendance` table
+
+### 4️⃣ Environment Variables
+
+Create `.env.local` in the project root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+Get these from Supabase: **Project Settings > API > Project URL & Anon Key**
+
+### 5️⃣ Run Development Server
+
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 📝 Available Scripts
+
+```bash
+# Development
+npm run dev              # Start development server (http://localhost:3000)
+npm run build           # Build for production
+npm start               # Start production server
+
+# Testing
+npm run test            # Run jest tests
+npm run test:watch      # Watch mode for tests
+npm run test:e2e        # Run Playwright E2E tests
+npm run test:e2e:ui     # E2E tests with UI
+
+# Code Quality
+npm run lint            # Run ESLint
+npm run lint:fix        # Fix ESLint issues
+npm run format          # Format with Prettier
+npm run typecheck       # TypeScript type checking
+
+# Analysis
+npm run build:analyze   # Bundle analysis
+npm run perf:budget     # Performance budget check
+npm run security:snyk   # Security vulnerability scan
+
+# Documentation
+npm run storybook       # Start Storybook (component docs)
+npm run build-storybook # Build Storybook
+```
+
+---
+
+## 🌐 Deployment
+
+### Vercel (Recommended)
+
+1. **Push to GitHub**
 
    ```bash
-   git clone https://github.com/Mohit-cmd-jpg/hrms-lite.git
-   cd hrms-lite
+   git push origin master
    ```
 
-2. **Install dependencies**
+2. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Add Environment Variables:
+     - `NEXT_PUBLIC_SUPABASE_URL`
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - Deploy!
 
-   ```bash
-   npm install
-   ```
+3. **Supabase Setup** (if not done)
+   - Execute SQL script (see above)
+   - Disable RLS policies
 
-3. **Set up environment variables**
+### Environment Variables
 
-   Create `.env.local` in the root directory:
+In Vercel project settings, add:
 
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
+```
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
+
+---
+
+## 🧪 Testing
+
+### Run All Tests
+
+```bash
+npm test
+```
+
+### Run Specific Test Suite
+
+```bash
+npm run test:api        # API route tests
+```
+
+### E2E Testing
+
+```bash
+npm run test:e2e        # Headless
+npm run test:e2e:ui     # With browser UI
+```
+
+### View Test Coverage
+
+```bash
+npm test -- --coverage
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Database Shows No Data
+
+**Problem**: Pages load but employee list is empty
+
+**Solutions**:
+
+1. ✅ Execute SQL script in Supabase (see Quick Start Step 3)
+2. ✅ Disable RLS or add read policies
+3. ✅ Verify credentials in `.env.local`
+
+### "Supabase not configured" Error
+
+**Solution**:
+
+- Check `.env.local` exists
+- Verify `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set
+- Restart dev server: `npm run dev`
+
+### Permission Denied on GitHub Push
+
+**Solution**:
+
+- See [GITHUB_AUTHENTICATION_GUIDE.md](./GITHUB_AUTHENTICATION_GUIDE.md)
+- Use SSH key or Personal Access Token
+
+### Tests Failing
+
+**Solution**:
+
+```bash
+npm install              # Update dependencies
+npm run test            # Run tests
+npm run format          # Auto-fix formatting
+npm run lint:fix        # Auto-fix lint issues
+```
+
+### API Returns 404
+
+**Solution**:
+
+- Ensure `.env.local` has correct credentials
+- Check Supabase tables exist
+- Verify tables are accessible (RLS disabled or policy exists)
+
+---
+
+## 📚 Documentation
+
+- **[QUICK_START.md](./QUICK_START.md)** - Quick reference guide
+- **[PROJECT_ANALYSIS_AND_FIX.md](./PROJECT_ANALYSIS_AND_FIX.md)** - Complete setup guide
+- **[GITHUB_AUTHENTICATION_GUIDE.md](./GITHUB_AUTHENTICATION_GUIDE.md)** - Git auth solutions
+- **[PROJECT_STATUS_REPORT.md](./PROJECT_STATUS_REPORT.md)** - Technical analysis
+- **[setup-database.sql](./setup-database.sql)** - Database schema
+- **[.env.local.example](./.env.local.example)** - Environment template
+
+---
+
+## 🔍 API Endpoints
+
+### Employees API
+
+| Method | Endpoint                       | Body                             | Description         |
+| ------ | ------------------------------ | -------------------------------- | ------------------- |
+| GET    | `/api/employees`               | -                                | Fetch all employees |
+| POST   | `/api/employees`               | `{full_name, email, department}` | Create employee     |
+| DELETE | `/api/employees?employee_id=X` | -                                | Delete employee     |
+
+### Attendance API
+
+| Method | Endpoint                        | Body                          | Description             |
+| ------ | ------------------------------- | ----------------------------- | ----------------------- |
+| GET    | `/api/attendance`               | -                             | Fetch all attendance    |
+| GET    | `/api/attendance?employee_id=X` | -                             | Get employee attendance |
+| POST   | `/api/attendance`               | `{employee_id, date, status}` | Mark attendance         |
+
+---
+
+## 🔐 Security
+
+- ✅ **Input Validation**: Zod schemas on all endpoints
+- ✅ **Type Safety**: TypeScript strict mode
+- ✅ **Error Handling**: Safe error messages (no data leaks)
+- ✅ **HTTPS Only**: Vercel provides SSL/TLS
+- ✅ **Environment Variables**: Secrets not in code
+- ✅ **Security Scanning**: Snyk integration
+- ✅ **Dependency Updates**: Dependabot configured
+
+### Best Practices
+
+- Use environment variables for secrets
+- Keep `.env.local` in `.gitignore`
+- Never commit `NEXT_PUBLIC_` vars with real values
+- Use Supabase Row Level Security in production
+- Monitor errors with Sentry
+
+---
+
+## 📊 Performance
+
+- **TypeScript**: Full type safety
+- **Tailwind CSS**: Minimal CSS output
+- **Next.js**: Built-in optimization
+- **Database Indexes**: Indexed queries
+- **Error Tracking**: Sentry monitoring
+- **Bundle Analysis**: Monitor bundle size
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/name`
+3. Make your changes
+4. Run tests: `npm test`
+5. Commit: `git commit -m "feat: description"`
+6. Push: `git push origin feature/name`
+7. Create a Pull Request
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License - see [LICENSE](./LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Mohit** - [GitHub Profile](https://github.com/Mohit-cmd-jpg)
+
+---
+
+## 🚀 What's Next?
+
+- [ ] Add user authentication
+- [ ] Implement permission roles (Admin, Manager, Employee)
+- [ ] Add salary management module
+- [ ] Implement leave management
+- [ ] Add reports and analytics
+- [ ] Mobile app with React Native
+
+---
+
+## 💡 Support
+
+For issues and questions:
+
+1. Check [Troubleshooting](##-troubleshooting) section
+2. Review [PROJECT_ANALYSIS_AND_FIX.md](./PROJECT_ANALYSIS_AND_FIX.md)
+3. Open an issue on GitHub
+
+---
+
+**Last Updated**: March 2026 | **Status**: Production Ready ✅
 
 4. **Run the development server**
 
