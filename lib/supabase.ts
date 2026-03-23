@@ -27,13 +27,30 @@ export function initSupabase(): SupabaseClient | null {
   if (supabaseInstance) return supabaseInstance
 
   if (!supabaseUrl || !supabaseKey) {
-    console.error(
-      'Supabase environment variables not configured. Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY',
-    )
+    const missing = []
+    if (!supabaseUrl)
+      missing.push('NEXT_PUBLIC_SUPABASE_URL is missing or empty')
+    if (!supabaseKey) {
+      missing.push(
+        'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY is missing or empty',
+      )
+    }
+
+    const errorMsg =
+      'Supabase Configuration Error:\n' +
+      missing.join('\n') +
+      '\n\nMake sure these environment variables are set in:\n' +
+      '1. Local: .env.local file\n' +
+      '2. Vercel: Settings > Environment Variables\n' +
+      '3. After adding to Vercel, redeploy your project\n\n' +
+      'Check: https://supabase.com/dashboard/project/_/settings/api'
+
+    console.error(errorMsg)
     return null
   }
 
   try {
+    console.log('Initializing Supabase with URL:', supabaseUrl)
     supabaseInstance = createClient(supabaseUrl, supabaseKey)
     return supabaseInstance
   } catch (error) {
