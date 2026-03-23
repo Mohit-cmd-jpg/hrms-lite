@@ -12,6 +12,13 @@ A **production-ready** Human Resource Management System built with Next.js 16, R
 
 ---
 
+## 🚀 Recent Updates
+- Cleaned up leftover documentation and deployment artifacts from repository root.
+- Updated Supabase environment variables for seamless deployment.
+- Fixed GitHub authentication and permissions for automated workflows.
+
+---
+
 ## 📲 Live Deployment
 
 - **Production**: [https://hrms-eta-five.vercel.app](https://hrms-eta-five.vercel.app)
