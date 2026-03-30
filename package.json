@@ -41,7 +41,7 @@
     "@size-limit/file": "^12.0.1",
     "@storybook/addon-a11y": "^10.2.19",
     "@storybook/nextjs": "^10.2.19",
-    "@storybook/test-runner": "^0.24.2",
+    "@storybook/test-runner": "^0.24.3",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
